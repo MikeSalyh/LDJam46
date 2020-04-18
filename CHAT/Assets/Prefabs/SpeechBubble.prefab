@@ -132,35 +132,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0607d1bd24e15a44a52cfbce94a1682, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  responses:
-  - No way
-  - Thank you
-  - Okay
-  - Alright
-  - Go on
-  - Are you sure?
-  - Shut up
-  maskImage: {fileID: 5302447937954225577}
+  shapeImage: {fileID: 5302447937954225577}
   shadowImage: {fileID: 5302447938280443995}
+  patternImage: {fileID: 5302447936944103230}
   label: {fileID: 5302447937725862077}
-  patterns:
+  possiblePatterns:
   - {fileID: 21300000, guid: b36efc7e4c5757344a8f85eba729af1c, type: 3}
   - {fileID: 21300000, guid: 1afb7b0c419855042b60dc6c1db54f48, type: 3}
   - {fileID: 21300000, guid: a57db74fcb734ec4f924f94308bedf71, type: 3}
   - {fileID: 21300000, guid: b4bbeecc6b3b6644ca199efeae36eea8, type: 3}
   - {fileID: 21300000, guid: 89b82e551133dd94ead38fcf4e7fa5cc, type: 3}
-  bubbles:
+  possibleShapes:
   - {fileID: 21300000, guid: 6a2c02494a0a42d45b27cb8a6b90392a, type: 3}
   - {fileID: 21300000, guid: ac3f687038f295948bee6a6966062857, type: 3}
   - {fileID: 21300000, guid: c4f0b6e685f9e7f4ab676aae0829f178, type: 3}
   - {fileID: 21300000, guid: 885235110f5fb5f4fa8536fdd406c7cb, type: 3}
   - {fileID: 21300000, guid: 3cb176fb093405f4daf48fd71c7d8ac1, type: 3}
-  colors:
+  possibleColors:
   - {r: 1, g: 0, b: 0, a: 1}
-  - {r: 0.599242, g: 0, b: 0.6132076, a: 1}
-  - {r: 0.4575472, g: 1, b: 0.5475188, a: 1}
-  - {r: 1, g: 0.99501103, b: 0, a: 1}
-  - {r: 0.5424528, g: 0.8098736, b: 1, a: 1}
+  - {r: 0.5857251, g: 0.020870427, b: 0.6320754, a: 1}
+  - {r: 0.25943398, g: 0.7641978, b: 1, a: 1}
+  - {r: 0.1745283, g: 1, b: 0.30746487, a: 1}
+  - {r: 0.98929596, g: 1, b: 0, a: 1}
+  possibleResponses:
+  - Are you sure?
+  - Thank you
+  - Shut up!
+  - Alright
+  - Go on
+  - No Thanks
+  - Okay
 --- !u!1 &5302447937725862079
 GameObject:
   m_ObjectHideFlags: 0
@@ -172,6 +173,7 @@ GameObject:
   - component: {fileID: 5302447937725862078}
   - component: {fileID: 5302447937725862076}
   - component: {fileID: 5302447937725862077}
+  - component: {fileID: 1229862120}
   m_Layer: 5
   m_Name: Label
   m_TagString: Untagged
@@ -317,6 +319,19 @@ MonoBehaviour:
   - {fileID: 0}
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &1229862120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5302447937725862079}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95bead2f674c51941a3231078aaf9904, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rate: 0.2
 --- !u!1 &5302447937954225588
 GameObject:
   m_ObjectHideFlags: 0

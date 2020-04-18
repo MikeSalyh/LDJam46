@@ -45,7 +45,6 @@ public class SpeechBubble : MonoBehaviour
       throw new System.Exception("There must be exactly " + Variance + " shapes defined");
 
     DoWiggle();
-    Configure(Random.Range(0, Variance), Random.Range(0, Variance), Random.Range(0, Variance)); //WIP. Randomized config.
   }
 
   private void DoWiggle()
@@ -75,5 +74,45 @@ public class SpeechBubble : MonoBehaviour
     responseIndex++;
     if (responseIndex >= possibleResponses.Length)
       responseIndex = 0;
+  }
+
+  public void ConfigureWrongAnswer(int correctPattern, int correctShape, int correctColor)
+  {
+    Configure(GetRandomIntExcluding(correctPattern), GetRandomIntExcluding(correctShape), GetRandomIntExcluding(correctColor));
+  }
+
+  public void ConfigureWrongAnswer(SpeechBubble correctAnswer)
+  {
+    ConfigureWrongAnswer(correctAnswer.Pattern, correctAnswer.Shape, correctAnswer.Color);
+  }
+
+  public void ConfigureCorrectAnswer(int correctPattern, int correctShape, int correctColor)
+  {
+    int correctCategory = Random.Range(0, 3);
+    if(correctCategory == 0)
+      Configure(correctPattern, GetRandomIntExcluding(correctShape), GetRandomIntExcluding(correctColor));
+    else if(correctCategory == 1)
+      Configure(GetRandomIntExcluding(correctPattern), correctShape, GetRandomIntExcluding(correctColor));
+    else if(correctCategory == 2)
+      Configure(GetRandomIntExcluding(correctPattern), GetRandomIntExcluding(correctShape), correctColor);
+  }
+
+  public void ConfigureCorrectAnswer(SpeechBubble correctAnswer)
+  {
+    ConfigureCorrectAnswer(correctAnswer.Pattern, correctAnswer.Shape, correctAnswer.Color);
+  }
+
+
+
+  //This is super inefficient.
+  private int GetRandomIntExcluding(int exclusion)
+  {
+    int output;
+    output = Random.Range(0, Variance);
+    while (output == exclusion)
+    {
+      output = Random.Range(0, Variance);
+    }
+    return output;
   }
 }

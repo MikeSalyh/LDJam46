@@ -26,12 +26,32 @@ public class GameManager : MonoBehaviour
   public bool randomizeSuits;
   public bool randomizePatterns;
 
+  public delegate void ChangeStateDelegate(GameState newState);
+  public static ChangeStateDelegate OnChangeState;
+
   public enum GameState
   {
+    Init,
     Answering,
     Reveal
   }
-  public GameState currentState;
+
+  private GameState _currentState;
+  public GameState CurrentState
+  {
+    get { return _currentState; }
+    set { SwitchState(value); }
+  }
+
+  public void SwitchState(GameState newState)
+  {
+    if (_currentState == newState)
+      return;
+
+    _currentState = newState;
+    if (OnChangeState != null)
+      OnChangeState(newState);
+  }
 
 
 
@@ -47,7 +67,7 @@ public class GameManager : MonoBehaviour
 
   private void StartNewRound()
   {
-    currentState = GameState.Answering;
+    SwitchState(GameState.Answering);
 
     source.ConfigurePrompt();
     source.Appear();
@@ -65,7 +85,7 @@ public class GameManager : MonoBehaviour
 
   public void Evaluate(SpeechBubble clickedBubble)
   {
-    if (currentState == GameState.Answering)
+    if (CurrentState == GameState.Answering)
     {
       StartCoroutine(DoReveal(clickedBubble, clickedBubble.IsMatch(source)));
     }
@@ -73,7 +93,7 @@ public class GameManager : MonoBehaviour
 
   private IEnumerator DoReveal(SpeechBubble clickedBubble, bool success)
   {
-    currentState = GameState.Reveal;
+    SwitchState(GameState.Reveal);
 
     foreach (SpeechBubble answer in answers)
       if (answer != clickedBubble)
@@ -88,6 +108,11 @@ public class GameManager : MonoBehaviour
     clickedBubble.Reveal(success ? "Right!" : "Wrong!");
     if (success)
       Debug.Log("Point");
+
+    if (!success)
+    {
+      clickedBubble.transform.DOShakeRotation(1f);
+    }
 
     yield return new WaitForSeconds(1.15f);
     clickedBubble.Hide(0.4f);

@@ -8,6 +8,7 @@ public class BubblingText : MonoBehaviour
   private TextMeshProUGUI text;
   public float rate = 0.2f;
   private int charIndex = 0;
+  public bool active = true;
 
   // Start is called before the first frame update
   void Start()
@@ -20,15 +21,18 @@ public class BubblingText : MonoBehaviour
   {
     while (true)
     {
-      char[] ch = text.text.ToCharArray();
-      ch[charIndex] = char.IsUpper(ch[charIndex]) ? char.ToLower(ch[charIndex]) : char.ToUpper(ch[charIndex]);
-      text.text = new string(ch);
+      if (active)
+      {
+        char[] ch = text.text.ToCharArray();
+        ch[charIndex] = char.IsUpper(ch[charIndex]) ? char.ToLower(ch[charIndex]) : char.ToUpper(ch[charIndex]);
+        text.text = new string(ch);
 
-      charIndex++;
-      if (charIndex >= text.text.Length)
-        charIndex = 0;
-      if (char.IsWhiteSpace(text.text[charIndex]))
         charIndex++;
+        if (charIndex >= text.text.Length)
+          charIndex = 0;
+        if (char.IsWhiteSpace(text.text[charIndex]))
+          charIndex++;
+      }
 
       yield return new WaitForSeconds(rate);
     }

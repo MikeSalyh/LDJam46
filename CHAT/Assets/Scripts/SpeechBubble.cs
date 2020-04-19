@@ -7,16 +7,9 @@ using DG.Tweening;
 
 public class SpeechBubble : MonoBehaviour
 {
-  public const int Variance = 5;  //How many variants of each property exist
-
   public Image shapeImage, shadowImage, patternImage;
   public TextMeshProUGUI label;
 
-  [Header("Premutations")]
-  public Sprite[] possiblePatterns;
-  public Sprite[] possibleShapes;
-  public Color[] possibleColors;
-  public string[] possibleResponses = { "No way", "Thank you", "Okay", "Alright", "Go on", "Are you sure?", "Shut up" };
   private static int responseIndex = 0;
 
   private int _color, _pattern, _shape;
@@ -37,13 +30,6 @@ public class SpeechBubble : MonoBehaviour
   // Start is called before the first frame update
   void Start()
   {
-    if (possibleColors.Length != Variance)
-      throw new System.Exception("There must be exactly " + Variance + " colors defined");
-    if (possiblePatterns.Length != Variance)
-      throw new System.Exception("There must be exactly " + Variance + " patterns defined");
-    if (possibleShapes.Length != Variance)
-      throw new System.Exception("There must be exactly " + Variance + " shapes defined");
-
     DoWiggle();
   }
 
@@ -64,21 +50,26 @@ public class SpeechBubble : MonoBehaviour
     _shape = shape;
     _color = color;
 
-    patternImage.sprite = possiblePatterns[Pattern];
-    patternImage.color = possibleColors[Color];
-    shapeImage.sprite = possibleShapes[Shape];
-    shadowImage.sprite = possibleShapes[Shape];
+    patternImage.sprite = GameManager.instance.possiblePatterns[Pattern];
+    patternImage.color = GameManager.instance.possibleColors[Color];
+    shapeImage.sprite = GameManager.instance.possibleShapes[Shape];
+    shadowImage.sprite = GameManager.instance.possibleShapes[Shape];
 
     //Update the response text.
-    label.text = possibleResponses[responseIndex];
+    label.text = GameManager.instance.possibleResponses[responseIndex];
     responseIndex++;
-    if (responseIndex >= possibleResponses.Length)
+    if (responseIndex >= GameManager.instance.possibleResponses.Length)
       responseIndex = 0;
+  }
+
+  public void ConfigureRandom()
+  {
+    Configure(Random.Range(0, GameManager.instance.possiblePatterns.Length), Random.Range(0, GameManager.instance.possibleShapes.Length), Random.Range(0, GameManager.instance.possibleColors.Length));
   }
 
   public void ConfigureWrongAnswer(int correctPattern, int correctShape, int correctColor)
   {
-    Configure(GetRandomIntExcluding(correctPattern), GetRandomIntExcluding(correctShape), GetRandomIntExcluding(correctColor));
+    Configure(GetRandomIntExcluding(correctPattern, GameManager.instance.possiblePatterns.Length), GetRandomIntExcluding(correctShape, GameManager.instance.possibleShapes.Length), GetRandomIntExcluding(correctColor, GameManager.instance.possibleColors.Length));
   }
 
   public void ConfigureWrongAnswer(SpeechBubble correctAnswer)
@@ -90,11 +81,11 @@ public class SpeechBubble : MonoBehaviour
   {
     int correctCategory = Random.Range(0, 3);
     if(correctCategory == 0)
-      Configure(correctPattern, GetRandomIntExcluding(correctShape), GetRandomIntExcluding(correctColor));
+      Configure(correctPattern, GetRandomIntExcluding(correctShape, GameManager.instance.possibleShapes.Length), GetRandomIntExcluding(correctColor, GameManager.instance.possibleColors.Length));
     else if(correctCategory == 1)
-      Configure(GetRandomIntExcluding(correctPattern), correctShape, GetRandomIntExcluding(correctColor));
+      Configure(GetRandomIntExcluding(correctPattern, GameManager.instance.possiblePatterns.Length), correctShape, GetRandomIntExcluding(correctColor, GameManager.instance.possibleColors.Length));
     else if(correctCategory == 2)
-      Configure(GetRandomIntExcluding(correctPattern), GetRandomIntExcluding(correctShape), correctColor);
+      Configure(GetRandomIntExcluding(correctPattern, GameManager.instance.possiblePatterns.Length), GetRandomIntExcluding(correctShape, GameManager.instance.possibleShapes.Length), correctColor);
   }
 
   public void ConfigureCorrectAnswer(SpeechBubble correctAnswer)
@@ -102,16 +93,27 @@ public class SpeechBubble : MonoBehaviour
     ConfigureCorrectAnswer(correctAnswer.Pattern, correctAnswer.Shape, correctAnswer.Color);
   }
 
+  public bool IsMatch(SpeechBubble other)
+  {
+    if (other.Shape == this.Shape)
+      return true;
+    if (other.Color == this.Color)
+      return true;
+    if (other.Pattern == this.Pattern)
+      return true;
+
+    return false;
+  }
 
 
   //This is super inefficient.
-  private int GetRandomIntExcluding(int exclusion)
+  private int GetRandomIntExcluding(int exclusion, int length)
   {
     int output;
-    output = Random.Range(0, Variance);
+    output = Random.Range(0, length);
     while (output == exclusion)
     {
-      output = Random.Range(0, Variance);
+      output = Random.Range(0, length);
     }
     return output;
   }

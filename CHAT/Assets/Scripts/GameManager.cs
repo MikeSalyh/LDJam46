@@ -60,6 +60,8 @@ public class GameManager : MonoBehaviour
       OnChangeState(newState);
   }
 
+  public Raccoon leftRaccoon, rightRaccon;
+
   private void Start()
   {
     instance = this;
@@ -96,18 +98,29 @@ public class GameManager : MonoBehaviour
     SwitchState(GameState.Prompt);
     speakerIsLeft = !speakerIsLeft;
     if (speakerIsLeft)
+    {
       source.transform.SetAsFirstSibling();
+      leftRaccoon.SwitchState(Raccoon.State.talking);
+    }
     else
+    {
       source.transform.SetAsLastSibling();
+      rightRaccon.SwitchState(Raccoon.State.talking);
+    }
 
     currentDialogue = conversations[UnityEngine.Random.Range(0, conversations.Length)];
     source.ConfigurePrompt();
     source.Appear(currentDialogue.intro);
 
+
     yield return new WaitForSeconds(1.5f);
     SwitchState(GameState.Answer);
 
     source.HideLabel();
+    leftRaccoon.SwitchState(Raccoon.State.idle);
+    rightRaccon.SwitchState(Raccoon.State.idle);
+
+
     yield return new WaitForSeconds(0.1f);
 
     int correctAnswerIndex = UnityEngine.Random.Range(0, answers.Length);
@@ -149,7 +162,23 @@ public class GameManager : MonoBehaviour
 
     yield return new WaitForSeconds(0.25f);
     clickedBubble.transform.DOMove(centerPosition.position, 0.25f).SetEase(Ease.InOutSine);
-    clickedBubble.ShowLabel(success ? currentDialogue.success : currentDialogue.failure);
+
+    if (success)
+    {
+      clickedBubble.Flip(currentDialogue.success);
+      if (speakerIsLeft)
+      {
+        rightRaccon.SwitchState(Raccoon.State.talking);
+      }
+      else
+      {
+        leftRaccoon.SwitchState(Raccoon.State.talking);
+      }
+    }
+    else
+    {
+      clickedBubble.Flip(currentDialogue.failure);
+    }
 
     if (!success)
     {
@@ -160,7 +189,9 @@ public class GameManager : MonoBehaviour
     clickedBubble.Hide(0.4f);
     source.Hide(0.6f);
 
-    //WIP. This shouldn't be here, should it?
+    leftRaccoon.SwitchState(Raccoon.State.idle);
+    rightRaccon.SwitchState(Raccoon.State.idle);
+
     yield return new WaitForSeconds(1f);
     if(CurrentState == GameState.Reveal)
       StartCoroutine(StartNewRound());

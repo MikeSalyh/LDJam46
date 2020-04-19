@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
   public Sprite[] possiblePatterns;
   public Sprite[] possibleShapes;
   public Color[] possibleColors;
+  public Sprite[] possibleSuits;
   public string[] possibleResponses = { "No way", "Thank you", "Okay", "Alright", "Go on", "Are you sure?", "Shut up" };
 
   public SpeechBubble source;

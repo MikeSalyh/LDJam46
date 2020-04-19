@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
   public Sprite[] possibleShapes;
   public Color[] possibleColors;
   public Sprite[] possibleSuits;
-  public string[] possibleResponses = { "No way", "Thank you", "Okay", "Alright", "Go on", "Are you sure?", "Shut up" };
+  public Dialogue[] conversations;
 
   public SpeechBubble source;
   public SpeechBubble[] answers;
@@ -32,11 +32,13 @@ public class GameManager : MonoBehaviour
   public static AnswerDelegate OnAnswer;
 
   private bool speakerIsLeft = true;
+  private Dialogue currentDialogue;
 
   public enum GameState
   {
     Init,
-    Answering,
+    Prompt,
+    Answer,
     Reveal,
     GameOver
   }
@@ -66,7 +68,7 @@ public class GameManager : MonoBehaviour
     {
       answer.GetComponentInChildren<Button>().onClick.AddListener(delegate { Evaluate(answer); });
     }
-    StartNewRound();
+    StartCoroutine(StartNewRound());
   }
 
   private void Update()
@@ -80,7 +82,7 @@ public class GameManager : MonoBehaviour
 
   private void HandleGameOver()
   {
-    if (CurrentState == GameState.Answering)
+    if (CurrentState == GameState.Answer)
     {
       source.Hide(0.5f);
       for (int i = 0; i < answers.Length; i++)
@@ -89,33 +91,41 @@ public class GameManager : MonoBehaviour
     SwitchState(GameState.GameOver);
   }
 
-  private void StartNewRound()
+  private IEnumerator StartNewRound()
   {
-    SwitchState(GameState.Answering);
-
+    SwitchState(GameState.Prompt);
     speakerIsLeft = !speakerIsLeft;
     if (speakerIsLeft)
       source.transform.SetAsFirstSibling();
     else
       source.transform.SetAsLastSibling();
 
+    currentDialogue = conversations[UnityEngine.Random.Range(0, conversations.Length)];
     source.ConfigurePrompt();
-    source.Appear();
+    source.Appear(currentDialogue.intro);
+
+    yield return new WaitForSeconds(1.5f);
+    SwitchState(GameState.Answer);
+    source.Flip("", 0.5f);
+    yield return new WaitForSeconds(0.1f);
+
     int correctAnswerIndex = UnityEngine.Random.Range(0, answers.Length);
     for (int i = 0; i < answers.Length; i++)
     {
+      yield return new WaitForSeconds(0.06f);
       if (i == correctAnswerIndex)
         answers[i].ConfigureCorrectAnswer(source);
       else
         answers[i].ConfigureWrongAnswer(source);
 
-      answers[i].Appear((i+1)/16f);
+      answers[i].Appear();
     }
+    yield break;
   }
 
   public void Evaluate(SpeechBubble clickedBubble)
   {
-    if (CurrentState == GameState.Answering)
+    if (CurrentState == GameState.Answer)
     {
       StartCoroutine(DoReveal(clickedBubble, clickedBubble.IsMatch(source)));
     }
@@ -138,20 +148,20 @@ public class GameManager : MonoBehaviour
 
     yield return new WaitForSeconds(0.25f);
     clickedBubble.transform.DOMove(centerPosition.position, 0.25f).SetEase(Ease.InOutSine);
-    clickedBubble.Reveal(success ? "Right!" : "Wrong!");
+    clickedBubble.Flip(success ? currentDialogue.success : currentDialogue.failure);
 
     if (!success)
     {
       clickedBubble.transform.DOShakeRotation(1f);
     }
 
-    yield return new WaitForSeconds(1.15f);
+    yield return new WaitForSeconds(1.5f);
     clickedBubble.Hide(0.4f);
     source.Hide(0.6f);
 
     //WIP. This shouldn't be here, should it?
     yield return new WaitForSeconds(1f);
     if(CurrentState == GameState.Reveal)
-      StartNewRound();
+      StartCoroutine(StartNewRound());
   }
 }

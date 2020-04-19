@@ -270,7 +270,7 @@ GameObject:
   - component: {fileID: 240488282}
   - component: {fileID: 240488283}
   m_Layer: 5
-  m_Name: AwkwardnessMeter
+  m_Name: ConvoMeter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -321,24 +321,6 @@ MonoBehaviour:
   fireBar: {fileID: 502032280}
   lifeManager: {fileID: 1179365013}
   inverted: 0
---- !u!1 &247457820 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5302447937725862079, guid: 5f13b311c64d24f4b85161eb97d17247,
-    type: 3}
-  m_PrefabInstance: {fileID: 499100128}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &247457822
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 247457820}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1032d07fb4855334994ade619ade27d0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &289145072
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -638,10 +620,6 @@ PrefabInstance:
       propertyPath: tickPattern
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 920432489, guid: 5f13b311c64d24f4b85161eb97d17247, type: 3}
-      propertyPath: m_RootOrder
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 920432490, guid: 5f13b311c64d24f4b85161eb97d17247, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -698,7 +676,7 @@ PrefabInstance:
     - target: {fileID: 5302447937074568590, guid: 5f13b311c64d24f4b85161eb97d17247,
         type: 3}
       propertyPath: m_RootOrder
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5302447937074568590, guid: 5f13b311c64d24f4b85161eb97d17247,
         type: 3}
@@ -785,50 +763,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Source
       objectReference: {fileID: 0}
-    - target: {fileID: 5302447937725862077, guid: 5f13b311c64d24f4b85161eb97d17247,
-        type: 3}
-      propertyPath: m_textInfo.characterCount
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5302447937725862077, guid: 5f13b311c64d24f4b85161eb97d17247,
-        type: 3}
-      propertyPath: m_textInfo.spaceCount
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5302447937725862077, guid: 5f13b311c64d24f4b85161eb97d17247,
-        type: 3}
-      propertyPath: m_textInfo.wordCount
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5302447937725862077, guid: 5f13b311c64d24f4b85161eb97d17247,
-        type: 3}
-      propertyPath: m_textInfo.lineCount
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5302447937725862077, guid: 5f13b311c64d24f4b85161eb97d17247,
-        type: 3}
-      propertyPath: m_textInfo.pageCount
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5302447937725862077, guid: 5f13b311c64d24f4b85161eb97d17247,
-        type: 3}
-      propertyPath: m_text
-      value: MATCH
-      objectReference: {fileID: 0}
-    - target: {fileID: 5302447937725862077, guid: 5f13b311c64d24f4b85161eb97d17247,
-        type: 3}
-      propertyPath: m_fontSize
-      value: 86.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5302447937725862078, guid: 5f13b311c64d24f4b85161eb97d17247,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 176
-      objectReference: {fileID: 0}
     - target: {fileID: 5302447937725862079, guid: 5f13b311c64d24f4b85161eb97d17247,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5748966558041599361, guid: 5f13b311c64d24f4b85161eb97d17247,
         type: 3}
@@ -855,10 +793,7 @@ PrefabInstance:
       propertyPath: m_textInfo.pageCount
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 282907837, guid: 5f13b311c64d24f4b85161eb97d17247, type: 3}
-    - {fileID: 224781872, guid: 5f13b311c64d24f4b85161eb97d17247, type: 3}
-    - {fileID: 1229862120, guid: 5f13b311c64d24f4b85161eb97d17247, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5f13b311c64d24f4b85161eb97d17247, type: 3}
 --- !u!1 &502032278
 GameObject:
@@ -1085,7 +1020,7 @@ GameObject:
   - component: {fileID: 970067686}
   - component: {fileID: 970067685}
   m_Layer: 5
-  m_Name: Canvas (1)
+  m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1385,14 +1320,34 @@ MonoBehaviour:
   - {fileID: 21300000, guid: eccfe48ea0bacef48ad49b5d8aa0a98c, type: 3}
   - {fileID: 21300000, guid: 3aef8591e2558e54fbc352d542b195bd, type: 3}
   - {fileID: 21300000, guid: b30c8e9e317df854f8a3bb30a8a04b58, type: 3}
-  possibleResponses:
-  - No way
-  - Thank you
-  - Okay
-  - Alright
-  - Go on
-  - Are you sure?
-  - Shut up
+  conversations:
+  - intro: Nice Haircut
+    success: Thank you
+    failure: Uh...
+  - intro: Lovely weather today
+    success: It's summer!
+    failure: Uh...
+  - intro: How are you?
+    success: I'm doing good.
+    failure: Uh...
+  - intro: How's work been?
+    success: Busy!
+    failure: Uh...
+  - intro: How's the family?
+    success: They're good.
+    failure: Uh...
+  - intro: What's new?
+    success: Same old, same old.
+    failure: Uh...
+  - intro: Any weekend plans?
+    success: Just chilling.
+    failure: Uh...
+  - intro: Football!
+    success: What a match!
+    failure: Uh...
+  - intro: What's up?
+    success: Not much, you?
+    failure: Uh...
   source: {fileID: 1657196752}
   answers:
   - {fileID: 789414143}
@@ -1568,7 +1523,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 499100128}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2107624046}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b0607d1bd24e15a44a52cfbce94a1682, type: 3}
@@ -1981,8 +1936,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 1657196750}
   - {fileID: 2143310567}
+  - {fileID: 1657196750}
   m_Father: {fileID: 970067688}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2186,39 +2141,6 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!1 &2107624046 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5302447937074568591, guid: 5f13b311c64d24f4b85161eb97d17247,
-    type: 3}
-  m_PrefabInstance: {fileID: 499100128}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &2107624048
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2107624046}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 0.6698113, g: 0.6698113, b: 0.6698113, a: 1}
-  m_RaycastTarget: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
 --- !u!1 &2143310566
 GameObject:
   m_ObjectHideFlags: 0
@@ -2252,7 +2174,7 @@ RectTransform:
   - {fileID: 77877439}
   - {fileID: 1794615634}
   m_Father: {fileID: 1848498881}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}

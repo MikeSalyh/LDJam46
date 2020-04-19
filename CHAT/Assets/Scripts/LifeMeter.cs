@@ -22,7 +22,7 @@ public class LifeMeter : MonoBehaviour
   private void HandleStateChange(GameManager.GameState newState)
   {
     Debug.Log("Handling state change");
-    if (newState == GameManager.GameState.Answering)
+    if (newState == GameManager.GameState.Answer)
       StartBurning();
   }
 
@@ -31,6 +31,7 @@ public class LifeMeter : MonoBehaviour
     if (!correct)
     {
       transform.DOShakePosition(1.5f, 10f);
+      fire.DOFade(0f, 0.5f).SetDelay(0.5f);
     }
     else
     {

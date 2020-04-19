@@ -11,7 +11,6 @@ public class SpeechBubble : MonoBehaviour
   public GameObject flippingCard, keycodeCard;
   public TextMeshProUGUI label, keycodeKey;
 
-  private static int responseIndex = 0;
   [HideInInspector]
   public Vector3 defaultLocalScale, defaultLocalPosition;
   public KeyCode keyboardKey;
@@ -52,7 +51,8 @@ public class SpeechBubble : MonoBehaviour
 
   private void Start()
   {
-    if(tickPattern != TickPattern.none)
+    transform.localScale = Vector3.zero;
+    if (tickPattern != TickPattern.none)
       DoWiggle();
   }
 
@@ -80,12 +80,6 @@ public class SpeechBubble : MonoBehaviour
     shadowImage.sprite = GameManager.instance.possibleShapes[Shape];
     suitImage.color = GameManager.instance.possibleColors[Color] + UnityEngine.Color.grey;
     suitImage.sprite = GameManager.instance.possibleSuits[Suit];
-
-    //Update the response text.
-    label.text = GameManager.instance.possibleResponses[responseIndex];
-    responseIndex++;
-    if (responseIndex >= GameManager.instance.possibleResponses.Length)
-      responseIndex = 0;
   }
 
   public void ConfigurePrompt()
@@ -186,13 +180,13 @@ public class SpeechBubble : MonoBehaviour
     else return correctAnswer == 1 ? 0 : 1;
   }
 
-  public void Reveal(string text)
+  public void Flip(string text, float turnTime = 0.25f)
   {
     StopAllCoroutines();
-    StartCoroutine(RevealCoroutine(text, 0.25f));
+    StartCoroutine(FlipCoroutine(text, turnTime));
   }
 
-  private IEnumerator RevealCoroutine(string text, float turnTime)
+  private IEnumerator FlipCoroutine(string text, float turnTime = 0.25f)
   {
     flippingCard.transform.DORotate(new Vector3(0f, 180f, 0f), turnTime).SetEase(Ease.InOutSine);
     yield return new WaitForSeconds(turnTime / 2f);
@@ -203,17 +197,28 @@ public class SpeechBubble : MonoBehaviour
     yield break;
   }
 
-  public void Appear(float delay = 0f)
+  public void Appear(string labelText = "")
   {
-    label.gameObject.SetActive(false);
+    if (labelText.Length > 0)
+    {
+      label.gameObject.SetActive(true);
+      label.text = labelText;
+    }
+    else
+    {
+      label.gameObject.SetActive(false);
+    }
+
     suitImage.enabled = true;
     transform.localPosition = defaultLocalPosition;
     flippingCard.transform.localEulerAngles = Vector3.zero;
+    label.transform.localEulerAngles = Vector3.zero;
+    label.transform.localScale = Vector3.one;
     gameObject.SetActive(true);
     keycodeCard.SetActive(true);
 
     transform.localScale = Vector3.zero;
-    transform.DOScale(defaultLocalScale, 0.25f).SetEase(Ease.OutBack).SetDelay(delay);
+    transform.DOScale(defaultLocalScale, 0.25f).SetEase(Ease.OutBack);
   }
 
   public void Hide(float hideTime)

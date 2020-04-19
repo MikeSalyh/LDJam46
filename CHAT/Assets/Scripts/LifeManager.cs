@@ -39,7 +39,7 @@ public class LifeManager : MonoBehaviour
   // Update is called once per frame
   void Update()
   {
-    if (GameManager.instance.CurrentState == GameManager.GameState.Answering)
+    if (GameManager.instance.CurrentState == GameManager.GameState.Answer)
       ReduceLife(lifeDecreasePerSecond * Time.deltaTime);
   }
 

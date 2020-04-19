@@ -106,7 +106,8 @@ public class GameManager : MonoBehaviour
 
     yield return new WaitForSeconds(1.5f);
     SwitchState(GameState.Answer);
-    source.Flip("", 0.5f);
+
+    source.HideLabel();
     yield return new WaitForSeconds(0.1f);
 
     int correctAnswerIndex = UnityEngine.Random.Range(0, answers.Length);
@@ -148,7 +149,7 @@ public class GameManager : MonoBehaviour
 
     yield return new WaitForSeconds(0.25f);
     clickedBubble.transform.DOMove(centerPosition.position, 0.25f).SetEase(Ease.InOutSine);
-    clickedBubble.Flip(success ? currentDialogue.success : currentDialogue.failure);
+    clickedBubble.ShowLabel(success ? currentDialogue.success : currentDialogue.failure);
 
     if (!success)
     {

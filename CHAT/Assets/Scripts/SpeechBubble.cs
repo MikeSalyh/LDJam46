@@ -197,6 +197,21 @@ public class SpeechBubble : MonoBehaviour
     yield break;
   }
 
+  public void HideLabel()
+  {
+    label.DOFade(0f, 0.5f);
+  }
+
+  public void ShowLabel(string text)
+  {
+    label.text = text;
+    label.color = new Color(255, 255, 255, 0);
+    label.DOFade(1f, 0.25f);
+    label.gameObject.SetActive(true);
+    label.transform.localScale = new Vector3(1.75f, 1.75f, 1.75f);
+    label.transform.DOScale(new Vector3(1f, 1f, 1f), 0.25f).SetEase(Ease.OutBack);
+  }
+
   public void Appear(string labelText = "")
   {
     if (labelText.Length > 0)
@@ -214,6 +229,7 @@ public class SpeechBubble : MonoBehaviour
     flippingCard.transform.localEulerAngles = Vector3.zero;
     label.transform.localEulerAngles = Vector3.zero;
     label.transform.localScale = Vector3.one;
+    label.color = UnityEngine.Color.white;
     gameObject.SetActive(true);
     keycodeCard.SetActive(true);
 

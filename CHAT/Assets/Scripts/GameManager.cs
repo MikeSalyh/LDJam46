@@ -32,7 +32,7 @@ public class GameManager : MonoBehaviour
 
     foreach (SpeechBubble answer in answers)
     {
-      answer.GetComponent<Button>().onClick.AddListener(delegate { Evaluate(answer); });
+      answer.GetComponentInChildren<Button>().onClick.AddListener(delegate { Evaluate(answer); });
     }
     Shuffle();
   }

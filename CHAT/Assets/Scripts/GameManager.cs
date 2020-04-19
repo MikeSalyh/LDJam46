@@ -28,13 +28,15 @@ public class GameManager : MonoBehaviour
 
   public delegate void ChangeStateDelegate(GameState newState);
   public static ChangeStateDelegate OnChangeState;
+  public delegate void NewQuestionDelegate();
+  public static NewQuestionDelegate OnNewQuestion;
   public delegate void AnswerDelegate(bool correct);
   public static AnswerDelegate OnAnswer;
 
   private bool speakerIsLeft = true;
   private Dialogue currentDialogue;
 
-  public AudioClip correctAnswerSFX, wrongAnswerSFX;
+  public AudioClip correctAnswerSFX, wrongAnswerSFX, selectSFX;
   private AudioSource audioSrc;
 
   public enum GameState
@@ -100,6 +102,9 @@ public class GameManager : MonoBehaviour
   private IEnumerator StartNewRound()
   {
     SwitchState(GameState.Prompt);
+    if (OnNewQuestion != null)
+      OnNewQuestion();
+
     speakerIsLeft = !speakerIsLeft;
     currentDialogue = conversations[UnityEngine.Random.Range(0, conversations.Length)];
 
@@ -155,6 +160,8 @@ public class GameManager : MonoBehaviour
     SwitchState(GameState.Reveal);
     if (OnAnswer != null)
       OnAnswer(success);
+
+    audioSrc.PlayOneShot(selectSFX);
 
     foreach (SpeechBubble answer in answers)
       if (answer != clickedBubble)

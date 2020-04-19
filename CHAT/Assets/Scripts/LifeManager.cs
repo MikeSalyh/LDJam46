@@ -18,6 +18,7 @@ public class LifeManager : MonoBehaviour
   void Start()
   {
     GameManager.OnAnswer += HandleAnswer;
+    GameManager.OnNewQuestion += IncreaseSpeed;
   }
 
   void HandleAnswer(bool correct)
@@ -29,11 +30,15 @@ public class LifeManager : MonoBehaviour
     else
     {
       life += correctAnswerBonus;
-      lifeDecreasePerSecond += speedIncreasePerCA;
-      correctAnswerBonus += speedIncreasePerCA;
       score++;
     }
     life = Mathf.Clamp01(life);
+  }
+
+  void IncreaseSpeed()
+  {
+    lifeDecreasePerSecond += speedIncreasePerCA;
+    correctAnswerBonus += speedIncreasePerCA;
   }
 
   // Update is called once per frame

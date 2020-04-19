@@ -13,11 +13,17 @@ public class AdaptiveMusic : MonoBehaviour
   void Start()
   {
     src = GetComponent<AudioSource>();
+    src.loop = false;
+    src.Play();
   }
 
-    // Update is called once per frame
-    void Update()
+  // Update is called once per frame
+  void Update()
+  {
+    if (!src.isPlaying)
     {
-    src.pitch = Mathf.Lerp(1f, maxPitch, Mathf.InverseLerp(0f, maxGameSpeed, life.lifeDecreasePerSecond));
+      src.pitch = Mathf.Lerp(1f, maxPitch, Mathf.InverseLerp(0f, maxGameSpeed, life.lifeDecreasePerSecond));
+      src.Play();
     }
+  }
 }

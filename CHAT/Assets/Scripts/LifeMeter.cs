@@ -19,6 +19,12 @@ public class LifeMeter : MonoBehaviour
     GameManager.OnChangeState += HandleStateChange;
   }
 
+  void OnDisable()
+  {
+    GameManager.OnAnswer -= HandleAnswerGraphics;
+    GameManager.OnChangeState -= HandleStateChange;
+  }
+
   private void HandleStateChange(GameManager.GameState newState)
   {
     Debug.Log("Handling state change");

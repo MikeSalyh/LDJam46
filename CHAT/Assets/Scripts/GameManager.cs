@@ -76,7 +76,12 @@ public class GameManager : MonoBehaviour
     {
       answer.GetComponentInChildren<Button>().onClick.AddListener(delegate { Evaluate(answer); });
     }
-    StartCoroutine(StartNewRound(2f));
+    StartCoroutine(StartNewRound(1.5f));
+  }
+
+  private void OnDisable()
+  {
+    LifeManager.OnGameOver -= HandleGameOver;
   }
 
   private void Update()
@@ -90,6 +95,7 @@ public class GameManager : MonoBehaviour
 
   private void HandleGameOver()
   {
+    audioSrc.PlayOneShot(wrongAnswerSFX);
     if (CurrentState == GameState.Answer)
     {
       source.Hide(0.5f);
@@ -97,6 +103,9 @@ public class GameManager : MonoBehaviour
         answers[i].Hide(0.5f + i / 10f);
     }
     SwitchState(GameState.GameOver);
+
+    if (MetagameManager.instance != null)
+      MetagameManager.instance.GoToFinale();
   }
 
   private IEnumerator StartNewRound(float delay)

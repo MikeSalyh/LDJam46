@@ -9,7 +9,6 @@ public class LifeManager : MonoBehaviour
   public float correctAnswerBonus = 0.05f;
   public float wrongAnswerPenalty = 0.2f;
   public float speedIncreasePerCA = 0.01f;
-  public int score = 0;
 
   public delegate void GameEndDelegate();
   public static GameEndDelegate OnGameOver;
@@ -21,6 +20,12 @@ public class LifeManager : MonoBehaviour
     GameManager.OnNewQuestion += IncreaseSpeed;
   }
 
+  private void OnDisable()
+  {
+    GameManager.OnAnswer -= HandleAnswer;
+    GameManager.OnNewQuestion -= IncreaseSpeed;
+  }
+
   void HandleAnswer(bool correct)
   {
     if (!correct)
@@ -30,7 +35,8 @@ public class LifeManager : MonoBehaviour
     else
     {
       life += correctAnswerBonus;
-      score++;
+      if (MetagameManager.instance != null)
+        MetagameManager.instance.score++;
     }
     life = Mathf.Clamp01(life);
   }

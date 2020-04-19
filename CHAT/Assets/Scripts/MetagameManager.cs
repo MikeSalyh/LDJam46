@@ -54,6 +54,39 @@ public class MetagameManager : MonoBehaviour
     dimPlane.DOFade(0f, 0.5f);
   }
 
+  public void GoToMenu()
+  {
+    if (currentState != GameState.Loading)
+      StartCoroutine(GoToMenuCoroutine());
+  }
+
+  private IEnumerator GoToMenuCoroutine()
+  {
+    SwitchState(GameState.Loading);
+    dimPlane.DOFade(1f, 0.5f);
+    yield return new WaitForSeconds(0.5f);
+    SceneManager.LoadScene("Menu");
+    SwitchState(GameState.Menu);
+    dimPlane.DOFade(0f, 0.5f);
+  }
+
+  public void GoToFinale()
+  {
+    if (currentState != GameState.Loading)
+      StartCoroutine(GoToFinaleCoroutine());
+  }
+
+  private IEnumerator GoToFinaleCoroutine()
+  {
+    SwitchState(GameState.Loading);
+    dimPlane.DOFade(1f, 0.5f);
+    yield return new WaitForSeconds(0.5f);
+    SceneManager.LoadScene("Finale");
+    SwitchState(GameState.Finale);
+    dimPlane.DOFade(0f, 0.5f);
+  }
+
+
   public void SwitchState(GameState value)
   {
     if (currentState == value)  //If it's already in this state, do nothing.

@@ -187,7 +187,7 @@ public class SpeechBubble : MonoBehaviour
   {
     flippingCard.transform.DORotate(new Vector3(0f, 180f, 0f), turnTime).SetEase(Ease.InOutSine);
     yield return new WaitForSeconds(turnTime / 2f);
-    suitImage.enabled = false;
+    //suitImage.enabled = false;
     label.text = text;
     label.gameObject.SetActive(true);
     label.transform.localScale = new Vector3(-0.5f, 0.5f, 0.5f); 

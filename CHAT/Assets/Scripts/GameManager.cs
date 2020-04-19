@@ -28,12 +28,15 @@ public class GameManager : MonoBehaviour
 
   public delegate void ChangeStateDelegate(GameState newState);
   public static ChangeStateDelegate OnChangeState;
+  public delegate void AnswerDelegate(bool correct);
+  public static AnswerDelegate OnAnswer;
 
   public enum GameState
   {
     Init,
     Answering,
-    Reveal
+    Reveal,
+    GameOver
   }
 
   private GameState _currentState;
@@ -58,11 +61,23 @@ public class GameManager : MonoBehaviour
   private void Start()
   {
     instance = this;
+    LifeManager.OnGameOver += HandleGameOver;
     foreach (SpeechBubble answer in answers)
     {
       answer.GetComponentInChildren<Button>().onClick.AddListener(delegate { Evaluate(answer); });
     }
     StartNewRound();
+  }
+
+  private void HandleGameOver()
+  {
+    if (CurrentState == GameState.Answering)
+    {
+      source.Hide(0.5f);
+      for (int i = 0; i < answers.Length; i++)
+        answers[i].Hide(0.5f + i / 10f);
+    }
+    SwitchState(GameState.GameOver);
   }
 
   private void StartNewRound()
@@ -79,7 +94,7 @@ public class GameManager : MonoBehaviour
       else
         answers[i].ConfigureWrongAnswer(source);
 
-      answers[i].Appear((i+1)/8f);
+      answers[i].Appear((i+1)/16f);
     }
   }
 
@@ -94,6 +109,8 @@ public class GameManager : MonoBehaviour
   private IEnumerator DoReveal(SpeechBubble clickedBubble, bool success)
   {
     SwitchState(GameState.Reveal);
+    if (OnAnswer != null)
+      OnAnswer(success);
 
     foreach (SpeechBubble answer in answers)
       if (answer != clickedBubble)
@@ -106,8 +123,6 @@ public class GameManager : MonoBehaviour
     yield return new WaitForSeconds(0.25f);
     clickedBubble.transform.DOMove(centerPosition.position, 0.25f).SetEase(Ease.InOutSine);
     clickedBubble.Reveal(success ? "Right!" : "Wrong!");
-    if (success)
-      Debug.Log("Point");
 
     if (!success)
     {
@@ -120,7 +135,8 @@ public class GameManager : MonoBehaviour
 
     //WIP. This shouldn't be here, should it?
     yield return new WaitForSeconds(1f);
-    StartNewRound();
+    if(CurrentState == GameState.Reveal)
+      StartNewRound();
   }
 
 }

@@ -69,14 +69,24 @@ public class SpeechBubble : MonoBehaviour
       responseIndex = 0;
   }
 
-  public void ConfigureRandom()
+  public void ConfigurePrompt()
   {
-    Configure(Random.Range(0, GameManager.instance.possiblePatterns.Length), Random.Range(0, GameManager.instance.possibleShapes.Length), Random.Range(0, GameManager.instance.possibleColors.Length), Random.Range(0, GameManager.instance.possibleSuits.Length));
+    int color = 0, pattern = 0, suit = 0, shape = 0;
+    if (GameManager.instance.randomizeColors)
+      color = Random.Range(0, GameManager.instance.possibleColors.Length);
+    if (GameManager.instance.randomizePatterns)
+      pattern = Random.Range(0, GameManager.instance.possiblePatterns.Length);
+    if (GameManager.instance.randomizeSuits)
+      suit = Random.Range(0, GameManager.instance.possibleSuits.Length);
+    if (GameManager.instance.randomizeShapes)
+      shape = Random.Range(0, GameManager.instance.possibleShapes.Length);
+
+    Configure(pattern, shape, color, suit);
   }
 
   public void ConfigureWrongAnswer(int correctPattern, int correctShape, int correctColor, int correctSuit)
   {
-    Configure(GetRandomIntExcluding(correctPattern, GameManager.instance.possiblePatterns.Length), GetRandomIntExcluding(correctShape, GameManager.instance.possibleShapes.Length), GetRandomIntExcluding(correctColor, GameManager.instance.possibleColors.Length), GetRandomIntExcluding(correctSuit, GameManager.instance.possibleSuits.Length));
+    Configure(GetDistractorPattern(correctPattern), GetDistractorShape(correctShape), GetDistractorColor(correctColor), GetDistractorSuit(correctSuit));
   }
 
   public void ConfigureWrongAnswer(SpeechBubble correctAnswer)
@@ -86,15 +96,29 @@ public class SpeechBubble : MonoBehaviour
 
   public void ConfigureCorrectAnswer(int correctPattern, int correctShape, int correctColor, int correctSuit)
   {
-    int correctCategory = Random.Range(0, 4);
-    if(correctCategory == 0)
-      Configure(correctPattern, GetRandomIntExcluding(correctShape, GameManager.instance.possibleShapes.Length), GetRandomIntExcluding(correctColor, GameManager.instance.possibleColors.Length), GetRandomIntExcluding(correctSuit, GameManager.instance.possibleSuits.Length));
-    else if(correctCategory == 1)
-      Configure(GetRandomIntExcluding(correctPattern, GameManager.instance.possiblePatterns.Length), correctShape, GetRandomIntExcluding(correctColor, GameManager.instance.possibleColors.Length), GetRandomIntExcluding(correctSuit, GameManager.instance.possibleSuits.Length));
-    else if(correctCategory == 2)
-      Configure(GetRandomIntExcluding(correctPattern, GameManager.instance.possiblePatterns.Length), GetRandomIntExcluding(correctShape, GameManager.instance.possibleShapes.Length), correctColor, GetRandomIntExcluding(correctSuit, GameManager.instance.possibleSuits.Length));
-    else if(correctCategory == 3)
-      Configure(GetRandomIntExcluding(correctPattern, GameManager.instance.possiblePatterns.Length), GetRandomIntExcluding(correctShape, GameManager.instance.possibleShapes.Length), GetRandomIntExcluding(correctColor, GameManager.instance.possibleColors.Length), correctSuit);
+    //Find out which properties can be randomized
+    List<int> possibleCategories = new List<int>();
+    if (GameManager.instance.randomizePatterns)
+      possibleCategories.Add(0);
+    if (GameManager.instance.randomizeShapes)
+      possibleCategories.Add(1);
+    if (GameManager.instance.randomizeColors)
+      possibleCategories.Add(2);
+    if (GameManager.instance.randomizeSuits)
+      possibleCategories.Add(3);
+
+    if (possibleCategories.Count == 0)
+      throw new System.Exception("At least 1 category must be randomized in the game manager");
+
+    int pickedCategory = possibleCategories[Random.Range(0, possibleCategories.Count)];
+    if(pickedCategory == 0)
+      Configure(correctPattern, GetDistractorShape(correctShape), GetDistractorColor(correctColor), GetDistractorSuit(correctSuit));
+    else if(pickedCategory == 1)
+      Configure(GetDistractorPattern(correctPattern), correctShape, GetDistractorColor(correctColor), GetDistractorSuit(correctSuit));
+    else if(pickedCategory == 2)
+      Configure(GetDistractorPattern(correctPattern), GetDistractorShape(correctShape), correctColor, GetDistractorSuit(correctSuit));
+    else if(pickedCategory == 3)
+      Configure(GetDistractorPattern(correctPattern), GetDistractorShape(correctShape), GetDistractorColor(correctColor), correctSuit);
   }
 
   public void ConfigureCorrectAnswer(SpeechBubble correctAnswer)
@@ -112,8 +136,35 @@ public class SpeechBubble : MonoBehaviour
       return true;
     if (other.Suit == this.Suit)
       return true;
-
     return false;
+  }
+
+  public int GetDistractorShape(int correctAnswer)
+  {
+    if (GameManager.instance.randomizeShapes)
+      return GetRandomIntExcluding(correctAnswer, GameManager.instance.possibleShapes.Length);
+    else return correctAnswer == 1 ? 0 : 1;
+  }
+
+  public int GetDistractorColor(int correctAnswer)
+  {
+    if(GameManager.instance.randomizeColors)
+      return GetRandomIntExcluding(correctAnswer, GameManager.instance.possibleColors.Length);
+    else return correctAnswer == 1 ? 0 : 1;
+  }
+
+  public int GetDistractorPattern(int correctAnswer)
+  {
+    if(GameManager.instance.randomizePatterns)
+      return GetRandomIntExcluding(correctAnswer, GameManager.instance.possiblePatterns.Length);
+    else return correctAnswer == 1 ? 0 : 1;
+  }
+
+  public int GetDistractorSuit(int correctAnswer)
+  {
+    if(GameManager.instance.randomizeSuits)
+      return GetRandomIntExcluding(correctAnswer, GameManager.instance.possibleSuits.Length);
+    else return correctAnswer == 1 ? 0 : 1;
   }
 
 

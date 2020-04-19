@@ -19,6 +19,11 @@ public class GameManager : MonoBehaviour
   public SpeechBubble source;
   public SpeechBubble[] answers;
 
+  public bool randomizeColors;
+  public bool randomizeShapes;
+  public bool randomizeSuits;
+  public bool randomizePatterns;
+
 
 
   private void Start()
@@ -34,7 +39,7 @@ public class GameManager : MonoBehaviour
 
   private void Shuffle()
   {
-    source.ConfigureRandom();
+    source.ConfigurePrompt();
     int correctAnswerIndex = UnityEngine.Random.Range(0, answers.Length);
     for (int i = 0; i < answers.Length; i++)
     {

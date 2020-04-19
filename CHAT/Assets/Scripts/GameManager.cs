@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class GameManager : MonoBehaviour
 {
@@ -18,11 +19,19 @@ public class GameManager : MonoBehaviour
 
   public SpeechBubble source;
   public SpeechBubble[] answers;
+  public Transform centerPosition;
 
   public bool randomizeColors;
   public bool randomizeShapes;
   public bool randomizeSuits;
   public bool randomizePatterns;
+
+  public enum GameState
+  {
+    Answering,
+    Reveal
+  }
+  public GameState currentState;
 
 
 
@@ -50,12 +59,36 @@ public class GameManager : MonoBehaviour
     }
   }
 
-  public void Evaluate(SpeechBubble origin)
+  public void Evaluate(SpeechBubble clickedBubble)
   {
-    if (origin.IsMatch(source))
+    if (currentState == GameState.Answering)
     {
-      Debug.Log("Match");
-      Shuffle();
+      StartCoroutine(DoReveal(clickedBubble, clickedBubble.IsMatch(source)));
     }
   }
+
+  private IEnumerator DoReveal(SpeechBubble clickedBubble, bool success)
+  {
+    currentState = GameState.Reveal;
+    foreach (SpeechBubble answer in answers)
+    {
+      if (answer != clickedBubble)
+      {
+        answer.Hide(0.25f);
+      }
+      else
+      {
+        clickedBubble.transform.SetAsLastSibling();
+        clickedBubble.transform.localScale = clickedBubble.defaultLocalScale * 0.8f;
+        clickedBubble.transform.DOScale(Vector3.one, 0.15f).SetEase(Ease.InOutSine);
+      }
+    }
+    yield return new WaitForSeconds(0.25f);
+    clickedBubble.transform.DOMove(centerPosition.position, 0.25f).SetEase(Ease.InOutSine);
+    clickedBubble.Reveal(success ? "Right!" : "Wrong!");
+    yield return new WaitForSeconds(1.5f);
+    clickedBubble.Hide(0.4f);
+    source.Hide(0.6f);
+  }
+
 }

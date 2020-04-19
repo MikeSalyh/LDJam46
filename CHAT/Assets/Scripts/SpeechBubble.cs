@@ -8,9 +8,13 @@ using DG.Tweening;
 public class SpeechBubble : MonoBehaviour
 {
   public Image shapeImage, shadowImage, patternImage, suitImage;
+  public GameObject flippingCard;
   public TextMeshProUGUI label;
 
   private static int responseIndex = 0;
+  public bool tickClockwise = true;
+  public Vector3 defaultLocalScale;
+  public Vector3 defaultLocalPosition;
 
   private int _color, _pattern, _shape, _suit;
   public int Color
@@ -34,6 +38,8 @@ public class SpeechBubble : MonoBehaviour
   // Start is called before the first frame update
   void Start()
   {
+    defaultLocalScale = transform.localScale;
+    defaultLocalPosition = transform.localPosition;
     DoWiggle();
   }
 
@@ -41,7 +47,7 @@ public class SpeechBubble : MonoBehaviour
   {
     float tempo = 1f;
     float offset = Random.Range(5f, 10f);
-    if (Random.value > 0.5f)
+    if (tickClockwise)
       offset *= -1f;
 
     transform.localEulerAngles = new Vector3(0f, 0f, -offset);
@@ -84,7 +90,7 @@ public class SpeechBubble : MonoBehaviour
     Configure(pattern, shape, color, suit);
   }
 
-  public void ConfigureWrongAnswer(int correctPattern, int correctShape, int correctColor, int correctSuit)
+  private void ConfigureWrongAnswer(int correctPattern, int correctShape, int correctColor, int correctSuit)
   {
     Configure(GetDistractorPattern(correctPattern), GetDistractorShape(correctShape), GetDistractorColor(correctColor), GetDistractorSuit(correctSuit));
   }
@@ -94,7 +100,7 @@ public class SpeechBubble : MonoBehaviour
     ConfigureWrongAnswer(correctAnswer.Pattern, correctAnswer.Shape, correctAnswer.Color, correctAnswer.Suit);
   }
 
-  public void ConfigureCorrectAnswer(int correctPattern, int correctShape, int correctColor, int correctSuit)
+  private void ConfigureCorrectAnswer(int correctPattern, int correctShape, int correctColor, int correctSuit)
   {
     //Find out which properties can be randomized
     List<int> possibleCategories = new List<int>();
@@ -139,32 +145,63 @@ public class SpeechBubble : MonoBehaviour
     return false;
   }
 
-  public int GetDistractorShape(int correctAnswer)
+  private int GetDistractorShape(int correctAnswer)
   {
     if (GameManager.instance.randomizeShapes)
       return GetRandomIntExcluding(correctAnswer, GameManager.instance.possibleShapes.Length);
     else return correctAnswer == 1 ? 0 : 1;
   }
 
-  public int GetDistractorColor(int correctAnswer)
+  private int GetDistractorColor(int correctAnswer)
   {
     if(GameManager.instance.randomizeColors)
       return GetRandomIntExcluding(correctAnswer, GameManager.instance.possibleColors.Length);
     else return correctAnswer == 1 ? 0 : 1;
   }
 
-  public int GetDistractorPattern(int correctAnswer)
+  private int GetDistractorPattern(int correctAnswer)
   {
     if(GameManager.instance.randomizePatterns)
       return GetRandomIntExcluding(correctAnswer, GameManager.instance.possiblePatterns.Length);
     else return correctAnswer == 1 ? 0 : 1;
   }
 
-  public int GetDistractorSuit(int correctAnswer)
+  private int GetDistractorSuit(int correctAnswer)
   {
     if(GameManager.instance.randomizeSuits)
       return GetRandomIntExcluding(correctAnswer, GameManager.instance.possibleSuits.Length);
     else return correctAnswer == 1 ? 0 : 1;
+  }
+
+  public void Reveal(string text)
+  {
+    StopAllCoroutines();
+    StartCoroutine(RevealCoroutine(text, 0.25f));
+  }
+
+  private IEnumerator RevealCoroutine(string text, float turnTime)
+  {
+    flippingCard.transform.DORotate(new Vector3(0f, 180f, 0f), turnTime).SetEase(Ease.InOutSine);
+    yield return new WaitForSeconds(turnTime / 2f);
+    suitImage.enabled = false;
+    label.text = text;
+    label.gameObject.SetActive(true);
+    label.transform.localScale = new Vector3(-0.5f, 0.5f, 0.5f); 
+    label.transform.DOScale(new Vector3(-1f, 1f, 1f), 0.15f).SetEase(Ease.OutBack);
+    yield break;
+  }
+
+  public void Hide(float hideTime)
+  {
+    StopAllCoroutines();
+    StartCoroutine(HideCoroutine(hideTime));
+  }
+
+  private IEnumerator HideCoroutine(float hideTime = 0.25f)
+  {
+    transform.DOScale(0f, hideTime).SetEase(Ease.InBack);
+    yield return new WaitForSeconds(hideTime);
+    gameObject.SetActive(false);
   }
 
 

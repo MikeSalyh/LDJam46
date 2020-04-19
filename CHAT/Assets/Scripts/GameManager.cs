@@ -76,7 +76,7 @@ public class GameManager : MonoBehaviour
     {
       answer.GetComponentInChildren<Button>().onClick.AddListener(delegate { Evaluate(answer); });
     }
-    StartCoroutine(StartNewRound());
+    StartCoroutine(StartNewRound(2f));
   }
 
   private void Update()
@@ -99,8 +99,10 @@ public class GameManager : MonoBehaviour
     SwitchState(GameState.GameOver);
   }
 
-  private IEnumerator StartNewRound()
+  private IEnumerator StartNewRound(float delay)
   {
+    yield return new WaitForSeconds(delay);
+
     SwitchState(GameState.Prompt);
     if (OnNewQuestion != null)
       OnNewQuestion();
@@ -207,8 +209,7 @@ public class GameManager : MonoBehaviour
     leftRaccoon.SwitchState(Raccoon.State.idle);
     rightRaccon.SwitchState(Raccoon.State.idle);
 
-    yield return new WaitForSeconds(1f);
     if(CurrentState == GameState.Reveal)
-      StartCoroutine(StartNewRound());
+      StartCoroutine(StartNewRound(1f));
   }
 }

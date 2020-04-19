@@ -2154,9 +2154,9 @@ MonoBehaviour:
   - {fileID: 77877441}
   - {fileID: 1794615636}
   centerPosition: {fileID: 2143310567}
-  randomizeColors: 0
-  randomizeShapes: 0
-  randomizeSuits: 0
+  randomizeColors: 1
+  randomizeShapes: 1
+  randomizeSuits: 1
   randomizePatterns: 1
   correctAnswerSFX: {fileID: 8300000, guid: 17824d6f1a3ca57448f2793f8c7738cd, type: 3}
   wrongAnswerSFX: {fileID: 8300000, guid: 8d009fb97c08a3243800e82cf2b2c537, type: 3}

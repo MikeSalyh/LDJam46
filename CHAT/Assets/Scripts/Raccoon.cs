@@ -24,13 +24,20 @@ public class Raccoon : MonoBehaviour
   private bool looping = false;
   public bool tickCCW;
 
+  private AudioSource audioSrc;
+  public AudioClip[] declarativeSFX;
+  public AudioClip[] interogativeSFX;
+  public float speakDelay = 0.1f;
+
   // Start is called before the first frame update
   void Start()
   {
+    audioSrc = GetComponent<AudioSource>();
     currentSequence = idleSprites;
     StartCoroutine(Animate());
     DoWiggle();
   }
+
 
   private void DoWiggle()
   {
@@ -43,15 +50,24 @@ public class Raccoon : MonoBehaviour
     transform.DOLocalMove(new Vector3(0f, offset, 0f), tempo).SetRelative(true).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.InOutBack);
   }
 
-  public void Update()
+  public void DoTalk(string spokenWords, bool isQuestion)
   {
-    if (Input.GetKeyDown(KeyCode.Alpha1))
-      SwitchState(State.idle);
-    if (Input.GetKeyDown(KeyCode.Alpha2))
-      SwitchState(State.sad);
-    if (Input.GetKeyDown(KeyCode.Alpha3))
-      SwitchState(State.talking);
+    SwitchState(State.talking);
+    StartCoroutine(TalkCoroutuine(spokenWords.Length / 2, isQuestion));
+  }
 
+  private IEnumerator TalkCoroutuine(int length, bool isQuestion)
+  {
+    int counter = length;
+    while (counter > 0)
+    {
+      counter--;
+      if(isQuestion)
+        audioSrc.PlayOneShot(interogativeSFX[Random.Range(0, interogativeSFX.Length)]);
+      else
+        audioSrc.PlayOneShot(declarativeSFX[Random.Range(0, declarativeSFX.Length)]);
+      yield return new WaitForSeconds(speakDelay);
+    }
   }
 
   public void SwitchState(State newState)

@@ -34,6 +34,9 @@ public class GameManager : MonoBehaviour
   private bool speakerIsLeft = true;
   private Dialogue currentDialogue;
 
+  public AudioClip correctAnswerSFX, wrongAnswerSFX;
+  private AudioSource audioSrc;
+
   public enum GameState
   {
     Init,
@@ -65,6 +68,7 @@ public class GameManager : MonoBehaviour
   private void Start()
   {
     instance = this;
+    audioSrc = GetComponent<AudioSource>();
     LifeManager.OnGameOver += HandleGameOver;
     foreach (SpeechBubble answer in answers)
     {
@@ -97,18 +101,19 @@ public class GameManager : MonoBehaviour
   {
     SwitchState(GameState.Prompt);
     speakerIsLeft = !speakerIsLeft;
+    currentDialogue = conversations[UnityEngine.Random.Range(0, conversations.Length)];
+
     if (speakerIsLeft)
     {
       source.transform.SetAsFirstSibling();
-      leftRaccoon.SwitchState(Raccoon.State.talking);
+      leftRaccoon.DoTalk(currentDialogue.intro, true);
     }
     else
     {
       source.transform.SetAsLastSibling();
-      rightRaccon.SwitchState(Raccoon.State.talking);
+      rightRaccon.DoTalk(currentDialogue.intro, true);
     }
 
-    currentDialogue = conversations[UnityEngine.Random.Range(0, conversations.Length)];
     source.ConfigurePrompt();
     source.Appear(currentDialogue.intro);
 
@@ -160,6 +165,9 @@ public class GameManager : MonoBehaviour
     clickedBubble.transform.DOScale(Vector3.one, 0.15f).SetEase(Ease.InOutSine);
     clickedBubble.keycodeCard.SetActive(false);
 
+    if(!success)
+      audioSrc.PlayOneShot(wrongAnswerSFX);
+
     yield return new WaitForSeconds(0.25f);
     clickedBubble.transform.DOMove(centerPosition.position, 0.25f).SetEase(Ease.InOutSine);
 
@@ -168,11 +176,11 @@ public class GameManager : MonoBehaviour
       clickedBubble.Flip(currentDialogue.success);
       if (speakerIsLeft)
       {
-        rightRaccon.SwitchState(Raccoon.State.talking);
+        rightRaccon.DoTalk(currentDialogue.success, false);
       }
       else
       {
-        leftRaccoon.SwitchState(Raccoon.State.talking);
+        leftRaccoon.DoTalk(currentDialogue.success, false);
       }
     }
     else

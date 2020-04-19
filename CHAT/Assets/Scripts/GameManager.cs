@@ -38,17 +38,19 @@ public class GameManager : MonoBehaviour
   private void Start()
   {
     instance = this;
-
     foreach (SpeechBubble answer in answers)
     {
       answer.GetComponentInChildren<Button>().onClick.AddListener(delegate { Evaluate(answer); });
     }
-    Shuffle();
+    StartNewRound();
   }
 
-  private void Shuffle()
+  private void StartNewRound()
   {
+    currentState = GameState.Answering;
+
     source.ConfigurePrompt();
+    source.Appear();
     int correctAnswerIndex = UnityEngine.Random.Range(0, answers.Length);
     for (int i = 0; i < answers.Length; i++)
     {
@@ -56,6 +58,8 @@ public class GameManager : MonoBehaviour
         answers[i].ConfigureCorrectAnswer(source);
       else
         answers[i].ConfigureWrongAnswer(source);
+
+      answers[i].Appear((i+1)/8f);
     }
   }
 
@@ -70,25 +74,28 @@ public class GameManager : MonoBehaviour
   private IEnumerator DoReveal(SpeechBubble clickedBubble, bool success)
   {
     currentState = GameState.Reveal;
+
     foreach (SpeechBubble answer in answers)
-    {
       if (answer != clickedBubble)
-      {
         answer.Hide(0.25f);
-      }
-      else
-      {
-        clickedBubble.transform.SetAsLastSibling();
-        clickedBubble.transform.localScale = clickedBubble.defaultLocalScale * 0.8f;
-        clickedBubble.transform.DOScale(Vector3.one, 0.15f).SetEase(Ease.InOutSine);
-      }
-    }
+
+    clickedBubble.transform.SetAsLastSibling();
+    clickedBubble.transform.localScale = clickedBubble.defaultLocalScale * 0.8f;
+    clickedBubble.transform.DOScale(Vector3.one, 0.15f).SetEase(Ease.InOutSine);
+
     yield return new WaitForSeconds(0.25f);
     clickedBubble.transform.DOMove(centerPosition.position, 0.25f).SetEase(Ease.InOutSine);
     clickedBubble.Reveal(success ? "Right!" : "Wrong!");
-    yield return new WaitForSeconds(1.5f);
+    if (success)
+      Debug.Log("Point");
+
+    yield return new WaitForSeconds(1.15f);
     clickedBubble.Hide(0.4f);
     source.Hide(0.6f);
+
+    //WIP. This shouldn't be here, should it?
+    yield return new WaitForSeconds(1f);
+    StartNewRound();
   }
 
 }

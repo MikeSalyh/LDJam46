@@ -421,7 +421,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 920432489, guid: 5f13b311c64d24f4b85161eb97d17247, type: 3}
       propertyPath: m_RootOrder
-      value: 5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1559063960, guid: 5f13b311c64d24f4b85161eb97d17247, type: 3}
       propertyPath: m_RootOrder
@@ -617,7 +617,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1657196750}
-  m_RootOrder: 4
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -1043,9 +1043,9 @@ MonoBehaviour:
   - {fileID: 1794615636}
   centerPosition: {fileID: 2143310567}
   randomizeColors: 1
-  randomizeShapes: 1
-  randomizeSuits: 1
-  randomizePatterns: 1
+  randomizeShapes: 0
+  randomizeSuits: 0
+  randomizePatterns: 0
   currentState: 0
 --- !u!4 &1179365012
 Transform:

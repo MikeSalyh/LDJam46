@@ -36,10 +36,14 @@ public class SpeechBubble : MonoBehaviour
 
 
   // Start is called before the first frame update
-  void Start()
+  void Awake()
   {
     defaultLocalScale = transform.localScale;
     defaultLocalPosition = transform.localPosition;
+  }
+
+  private void Start()
+  {
     DoWiggle();
   }
 
@@ -189,6 +193,18 @@ public class SpeechBubble : MonoBehaviour
     label.transform.localScale = new Vector3(-0.5f, 0.5f, 0.5f); 
     label.transform.DOScale(new Vector3(-1f, 1f, 1f), 0.15f).SetEase(Ease.OutBack);
     yield break;
+  }
+
+  public void Appear(float delay = 0f)
+  {
+    label.gameObject.SetActive(false);
+    suitImage.enabled = true;
+    transform.localPosition = defaultLocalPosition;
+    flippingCard.transform.localEulerAngles = Vector3.zero;
+    gameObject.SetActive(true);
+
+    transform.localScale = Vector3.zero;
+    transform.DOScale(defaultLocalScale, 0.25f).SetEase(Ease.OutBack).SetDelay(delay);
   }
 
   public void Hide(float hideTime)

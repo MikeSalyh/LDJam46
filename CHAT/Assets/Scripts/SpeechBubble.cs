@@ -8,13 +8,20 @@ using DG.Tweening;
 public class SpeechBubble : MonoBehaviour
 {
   public Image shapeImage, shadowImage, patternImage, suitImage;
-  public GameObject flippingCard;
-  public TextMeshProUGUI label;
+  public GameObject flippingCard, keycodeCard;
+  public TextMeshProUGUI label, keycodeKey;
 
   private static int responseIndex = 0;
-  public bool tickClockwise = true;
-  public Vector3 defaultLocalScale;
-  public Vector3 defaultLocalPosition;
+  [HideInInspector]
+  public Vector3 defaultLocalScale, defaultLocalPosition;
+  public KeyCode keyboardKey;
+  public enum TickPattern
+  {
+    cw,
+    ccw,
+    none
+  }
+  public TickPattern tickPattern;
 
   private int _color, _pattern, _shape, _suit;
   public int Color
@@ -40,18 +47,20 @@ public class SpeechBubble : MonoBehaviour
   {
     defaultLocalScale = transform.localScale;
     defaultLocalPosition = transform.localPosition;
+    keycodeKey.text = keyboardKey.ToString();
   }
 
   private void Start()
   {
-    DoWiggle();
+    if(tickPattern != TickPattern.none)
+      DoWiggle();
   }
 
   private void DoWiggle()
   {
     float tempo = 1f;
     float offset = Random.Range(5f, 10f);
-    if (tickClockwise)
+    if (tickPattern == TickPattern.ccw)
       offset *= -1f;
 
     transform.localEulerAngles = new Vector3(0f, 0f, -offset);
@@ -187,7 +196,6 @@ public class SpeechBubble : MonoBehaviour
   {
     flippingCard.transform.DORotate(new Vector3(0f, 180f, 0f), turnTime).SetEase(Ease.InOutSine);
     yield return new WaitForSeconds(turnTime / 2f);
-    //suitImage.enabled = false;
     label.text = text;
     label.gameObject.SetActive(true);
     label.transform.localScale = new Vector3(-0.5f, 0.5f, 0.5f); 
@@ -202,6 +210,7 @@ public class SpeechBubble : MonoBehaviour
     transform.localPosition = defaultLocalPosition;
     flippingCard.transform.localEulerAngles = Vector3.zero;
     gameObject.SetActive(true);
+    keycodeCard.SetActive(true);
 
     transform.localScale = Vector3.zero;
     transform.DOScale(defaultLocalScale, 0.25f).SetEase(Ease.OutBack).SetDelay(delay);

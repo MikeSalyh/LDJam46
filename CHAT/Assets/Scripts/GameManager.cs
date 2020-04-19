@@ -31,6 +31,8 @@ public class GameManager : MonoBehaviour
   public delegate void AnswerDelegate(bool correct);
   public static AnswerDelegate OnAnswer;
 
+  private bool speakerIsLeft = true;
+
   public enum GameState
   {
     Init,
@@ -56,8 +58,6 @@ public class GameManager : MonoBehaviour
       OnChangeState(newState);
   }
 
-
-
   private void Start()
   {
     instance = this;
@@ -67,6 +67,15 @@ public class GameManager : MonoBehaviour
       answer.GetComponentInChildren<Button>().onClick.AddListener(delegate { Evaluate(answer); });
     }
     StartNewRound();
+  }
+
+  private void Update()
+  {
+    for (int i = 0; i < answers.Length; i++)
+    {
+      if (Input.GetKeyDown(answers[i].keyboardKey))
+        Evaluate(answers[i]);
+    }
   }
 
   private void HandleGameOver()
@@ -83,6 +92,12 @@ public class GameManager : MonoBehaviour
   private void StartNewRound()
   {
     SwitchState(GameState.Answering);
+
+    speakerIsLeft = !speakerIsLeft;
+    if (speakerIsLeft)
+      source.transform.SetAsFirstSibling();
+    else
+      source.transform.SetAsLastSibling();
 
     source.ConfigurePrompt();
     source.Appear();
@@ -119,6 +134,7 @@ public class GameManager : MonoBehaviour
     clickedBubble.transform.SetAsLastSibling();
     clickedBubble.transform.localScale = clickedBubble.defaultLocalScale * 0.8f;
     clickedBubble.transform.DOScale(Vector3.one, 0.15f).SetEase(Ease.InOutSine);
+    clickedBubble.keycodeCard.SetActive(false);
 
     yield return new WaitForSeconds(0.25f);
     clickedBubble.transform.DOMove(centerPosition.position, 0.25f).SetEase(Ease.InOutSine);
@@ -138,5 +154,4 @@ public class GameManager : MonoBehaviour
     if(CurrentState == GameState.Reveal)
       StartNewRound();
   }
-
 }

@@ -2704,6 +2704,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: MetagameManager
       objectReference: {fileID: 0}
+    - target: {fileID: 7299184816041367143, guid: c87429ae89117cc46bd8089ee121419d,
+        type: 3}
+      propertyPath: m_Alpha
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7299184816392950101, guid: c87429ae89117cc46bd8089ee121419d,
         type: 3}
       propertyPath: m_LocalPosition.z

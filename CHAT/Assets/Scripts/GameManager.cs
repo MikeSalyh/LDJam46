@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour
   public SpeechBubble[] answers;
   public Transform centerPosition;
 
+  private int categoryDifficulty = 0;
   public bool randomizeColors;
   public bool randomizeShapes;
   public bool randomizeSuits;
@@ -63,6 +64,12 @@ public class GameManager : MonoBehaviour
     _currentState = newState;
     if (OnChangeState != null)
       OnChangeState(newState);
+
+    if (newState == GameState.GameOver)
+    {
+      if (MetagameManager.instance != null)
+        MetagameManager.instance.GoToFinale();
+    }
   }
 
   public Raccoon leftRaccoon, rightRaccon;
@@ -71,6 +78,7 @@ public class GameManager : MonoBehaviour
   {
     instance = this;
     audioSrc = GetComponent<AudioSource>();
+    HandleIncreaseCategoryDifficulty();
     LifeManager.OnGameOver += HandleGameOver;
     foreach (SpeechBubble answer in answers)
     {
@@ -102,10 +110,7 @@ public class GameManager : MonoBehaviour
       for (int i = 0; i < answers.Length; i++)
         answers[i].Hide(0.5f + i / 10f);
     }
-    SwitchState(GameState.GameOver);
-
-    if (MetagameManager.instance != null)
-      MetagameManager.instance.GoToFinale();
+    SwitchState(GameState.GameOver); 
   }
 
   private IEnumerator StartNewRound(float delay)
@@ -172,6 +177,11 @@ public class GameManager : MonoBehaviour
     if (OnAnswer != null)
       OnAnswer(success);
 
+    if (success)
+    {
+      HandleIncreaseCategoryDifficulty();
+    }
+
     audioSrc.PlayOneShot(selectSFX);
 
     foreach (SpeechBubble answer in answers)
@@ -220,5 +230,29 @@ public class GameManager : MonoBehaviour
 
     if(CurrentState == GameState.Reveal)
       StartCoroutine(StartNewRound(1f));
+  }
+
+  private void HandleIncreaseCategoryDifficulty()
+  {
+    categoryDifficulty++;
+    if (categoryDifficulty > 0)
+      randomizeColors = true;
+    else
+      randomizeColors = false;
+
+    if (categoryDifficulty > 2)
+      randomizeShapes = true;
+    else
+      randomizeShapes = false;
+
+    if (categoryDifficulty > 4)
+      randomizeSuits = true;
+    else
+      randomizeSuits = false;
+
+    if (categoryDifficulty > 6)
+      randomizePatterns = true;
+    else
+      randomizePatterns = false;
   }
 }

@@ -2125,7 +2125,7 @@ MonoBehaviour:
     success: Thank you
     failure: Uh...
   - intro: Lovely weather today
-    success: It's summer!
+    success: It's summer alright!
     failure: Uh...
   - intro: How are you?
     success: I'm doing good.
@@ -2142,11 +2142,20 @@ MonoBehaviour:
   - intro: Any weekend plans?
     success: Just chilling.
     failure: Uh...
-  - intro: Football!
+  - intro: Catch the game?
     success: What a match!
     failure: Uh...
   - intro: What's up?
     success: Not much, you?
+    failure: Uh...
+  - intro: Let's grab coffee
+    success: Absolutely
+    failure: Uh...
+  - intro: I like your shirt.
+    success: Thanks
+    failure: Uh...
+  - intro: Strange weather lately
+    success: Global warming
     failure: Uh...
   source: {fileID: 1657196752}
   answers:
@@ -2190,11 +2199,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   life: 1
-  lifeDecreasePerSecond: 0.022222223
-  correctAnswerBonus: 0.15
+  lifeDecreasePerSecond: 0.02
+  correctAnswerBonus: 0.4
   wrongAnswerPenalty: 0.15
-  speedIncreasePerCA: 0.02
-  score: 0
+  speedIncreasePerCA: 0.019
 --- !u!82 &1179365014
 AudioSource:
   m_ObjectHideFlags: 0

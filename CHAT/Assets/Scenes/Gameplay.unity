@@ -2143,7 +2143,7 @@ MonoBehaviour:
     success: Just chilling.
     failure: Uh...
   - intro: Catch the game?
-    success: What a match!
+    success: What a play!
     failure: Uh...
   - intro: What's up?
     success: Not much, you?

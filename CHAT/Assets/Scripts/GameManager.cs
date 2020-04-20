@@ -213,7 +213,7 @@ public class GameManager : MonoBehaviour
     }
     else
     {
-      clickedBubble.Flip(currentDialogue.failure);
+      clickedBubble.Flip(currentDialogue.failure + "\n<size=0.5em>(Bad Match)</size>");
     }
 
     if (!success)

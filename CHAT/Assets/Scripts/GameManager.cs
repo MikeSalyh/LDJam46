@@ -241,14 +241,14 @@ public class GameManager : MonoBehaviour
       randomizeColors = false;
 
     if (categoryDifficulty > 2)
-      randomizeShapes = true;
-    else
-      randomizeShapes = false;
-
-    if (categoryDifficulty > 4)
       randomizeSuits = true;
     else
       randomizeSuits = false;
+
+    if (categoryDifficulty > 4)
+      randomizeShapes = true;
+    else
+      randomizeShapes = false;
 
     if (categoryDifficulty > 6)
       randomizePatterns = true;
